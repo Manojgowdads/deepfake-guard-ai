@@ -11,8 +11,15 @@ st.set_page_config(page_title="Deepfake Guard", page_icon="🛡️", layout="wid
 
 @st.cache_resource
 def load_model():
-    # Tell the app EXACTLY where the brain is sitting
-    return tf.keras.models.load_model('deepfake_detector_model.h5')
+    import os
+    # Automatically finds the .h5 file in your GitHub folder
+    possible_models = [f for f in os.listdir('.') if f.endswith('.h5')]
+    if not possible_models:
+        st.error("🚨 ERROR: No .h5 model file found on GitHub!")
+        return None
+    
+    model_path = possible_models[0]
+    return tf.keras.models.load_model(model_path)
 @st.cache_resource
 def load_face_cascade():
     # 1. Point directly to the official OpenCV Github

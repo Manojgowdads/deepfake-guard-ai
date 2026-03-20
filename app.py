@@ -109,7 +109,10 @@ def main_app():
                 img = cv2.imdecode(file_bytes, 1)
 
                 # 2. Resize to fit your MobileNetV2 brain (224x224 pixels)
-                img_resized = cv2.resize(img, (224, 224))
+                img_resized = cv2.resize(img, (128, 128))
+
+                # Pro-tip: Let's also fix OpenCV's color glitch by adding this right below it:
+                img_resized = cv2.cvtColor(img_resized, cv2.COLOR_BGR2RGB)
 
                 # 3. The Math: Convert to array and scale pixels (your custom fix!)
                 face_array = np.array(img_resized)

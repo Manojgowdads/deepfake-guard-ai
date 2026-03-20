@@ -104,6 +104,32 @@ def main_app():
                 
                 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 # MACHA: PASTE YOUR ACTUAL CV2/MODEL MATH HERE!!!
+                # 1. Convert the uploaded web image into an OpenCV array
+                file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
+                img = cv2.imdecode(file_bytes, 1)
+
+                # 2. Resize to fit your MobileNetV2 brain (224x224 pixels)
+                img_resized = cv2.resize(img, (224, 224))
+
+                # 3. The Math: Convert to array and scale pixels (your custom fix!)
+                face_array = np.array(img_resized)
+                face_array = np.expand_dims(face_array, axis=0)
+                face_array = face_array / 255.0 
+
+                # 4. Load the brain and make the prediction
+                model = load_model()
+                if model is not None:
+                    prediction = model.predict(face_array)
+                    confidence = float(prediction[0][0])
+
+                    # 5. The Logic Check (Flipped for your specific model)
+                    if confidence < 0.5:
+                        st.metric(label="Deepfake Probability", value=f"{(1 - confidence) * 100:.2f}%", delta="High Risk", delta_color="inverse")
+                        st.error("🚨 ALERT: Deepfake Detected! High likelihood of AI manipulation.")
+                    else:
+                        st.metric(label="Authenticity Score", value=f"{confidence * 100:.2f}%", delta="Natural Textures Confirmed")
+                        st.success("✅ VERIFIED: Real Human.")
+                        st.balloons() # The ultimate victory balloons!
                 # (Load image, detect face, scale pixels, predict)
                 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 

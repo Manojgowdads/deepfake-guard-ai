@@ -85,7 +85,7 @@ with result_col:
             else:
                 confidence, face_crop = result
                 st.image(face_crop, caption="Isolated Face", width=120)
-                if confidence > 0.5:
+                if confidence < 0.5:
                     st.error(f"🚨 **VERDICT: DEEPFAKE DETECTED** (Confidence: {confidence * 100:.2f}%)")
                 else:
                     st.success(f"✅ **VERDICT: REAL HUMAN** (Confidence: {(1.0 - confidence) * 100:.2f}%)")
@@ -119,7 +119,7 @@ with result_col:
             else:
                 avg_confidence = sum(predictions) / len(predictions)
                 st.info(f"Scanned {len(predictions)} valid facial frames.")
-                if avg_confidence > 0.5:
+                if avg_confidence < 0.5:
                     st.error(f"🚨 **VERDICT: DEEPFAKE VIDEO** (Average Confidence: {avg_confidence * 100:.2f}%)")
                 else:
                     st.success(f"✅ **VERDICT: REAL VIDEO** (Average Confidence: {(1.0 - avg_confidence) * 100:.2f}%)")
